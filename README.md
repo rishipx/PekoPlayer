@@ -59,7 +59,7 @@
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/images/empty-player-state.png" alt="Interface"><br><sub><b>Transcript search.</b> Find a line, click to jump to it.</sub></td>
+    <td width="50%"><img src="docs/images/player-empty-state.png" alt="Interface"><br><sub><b>Transcript search.</b> Find a line, click to jump to it.</sub></td>
     <td width="50%"><img src="docs/images/settings.png" alt="Customize everything"><br><sub><b>Video effects.</b> Presets and fine control.</sub></td>
   </tr>
   <tr>

@@ -10,7 +10,7 @@
     "dist": "electron-builder --win portable --x64 --config electron-builder.yml"
   },
   "devDependencies": {
-    "electron": "44.5.1",
+    "electron": "44.7.0",
     "electron-builder": "26.15.3"
   }
 }

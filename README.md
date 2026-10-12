@@ -9,13 +9,13 @@
 </p>
 
 <p align="center">
-  <a href="https://OWNER.github.io/PekoPlayer/"><strong>Open the web app</strong></a> ·
-  <a href="https://github.com/OWNER/PekoPlayer/releases/latest"><strong>Download for Windows</strong></a> ·
+  <a href="https://rishipx.github.io/PekoPlayer/"><strong>Open the web app</strong></a> ·
+  <a href="https://github.com/rishipx/PekoPlayer/releases/latest"><strong>Download for Windows</strong></a> ·
   <a href="#documentation">Documentation</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/OWNER/PekoPlayer/actions/workflows/ci.yml"><img src="https://github.com/OWNER/PekoPlayer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="https://github.com/rishipx/PekoPlayer/actions/workflows/ci.yml"><img src="https://github.com/rishipx/PekoPlayer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
 </p>
 
 <p align="center"><img src="docs/images/player.png" alt="PekoPlayer playing a video with subtitles and the control bar" width="860"></p>
@@ -59,12 +59,12 @@
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/images/transcript-search.png" alt="Transcript search with highlighted matches"><br><sub><b>Transcript search.</b> Find a line, click to jump to it.</sub></td>
-    <td width="50%"><img src="docs/images/effects.png" alt="Video effects panel with presets and sliders"><br><sub><b>Video effects.</b> Presets and fine control.</sub></td>
+    <td width="50%"><img src="docs/images/empty-player-state.png" alt="Interface"><br><sub><b>Transcript search.</b> Find a line, click to jump to it.</sub></td>
+    <td width="50%"><img src="docs/images/settings.png" alt="Customize everything"><br><sub><b>Video effects.</b> Presets and fine control.</sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/images/multi-view-grid.png" alt="Multi-view wall in the grid layout"><br><sub><b>Multi-view, grid.</b> Every video keeps its shape.</sub></td>
-    <td width="50%"><img src="docs/images/multi-view-split.png" alt="Multi-view wall in the split layout with a resized column"><br><sub><b>Multi-view, split.</b> Drag the handle between panes to resize.</sub></td>
+    <td width="50%"><img src="docs/images/multi-view-grid.png" alt="View Multiple videos at same time"><br><sub><b>Multi-view, grid.</b> Every video keeps its shape.</sub></td>
+    <td width="50%"><img src="docs/images/keyboard-shortcuts.png" alt="built to be driven from the keyboard"><br><sub><b>Multi-view, split.</b> Drag the handle between panes to resize.</sub></td>
   </tr>
 </table>
 

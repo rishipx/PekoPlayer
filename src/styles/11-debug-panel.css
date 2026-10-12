@@ -1,0 +1,66 @@
+/* Debug tools panel (Ctrl+Shift+D). It is built on demand, so these rules cost nothing until it is opened. */
+.peko-debug {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483000;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-frame);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font: 12px/1.45 var(--font-body);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+
+.peko-debug[hidden] {
+  display: none;
+}
+
+.peko-debug header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.peko-debug button {
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.peko-debug button:hover,
+.peko-debug button:focus-visible {
+  border-color: var(--accent);
+}
+
+.peko-debug-actions {
+  display: grid;
+  gap: 6px;
+}
+
+.peko-debug-status {
+  min-height: 1.5em;
+  margin: 8px 0 0;
+  color: var(--accent);
+}
+
+.peko-debug-note {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+}
+
+.peko-debug-outline {
+  position: fixed;
+  z-index: 2147482999;
+  pointer-events: none;
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Clip A",
+  "duration": 12,
+  "chapters": [
+    { "start_time": 0, "end_time": 4, "title": "Intro" },
+    { "start_time": 4, "end_time": 12, "title": "Main" }
+  ]
+}

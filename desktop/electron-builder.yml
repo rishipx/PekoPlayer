@@ -1,0 +1,20 @@
+appId: app.pekoplayer.desktop
+productName: PekoPlayer
+directories:
+  output: ../release
+  buildResources: build
+files:
+  - '*.cjs'
+  - web/**
+asar: true
+electronLanguages:
+  - en-US
+win:
+  icon: build/icon.ico
+  target:
+    - target: portable
+      arch:
+        - x64
+portable:
+  artifactName: PekoPlayer-${version}-portable.exe
+  requestExecutionLevel: user

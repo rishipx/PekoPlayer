@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f4f1" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PekoPlayer">
+<meta name="application-name" content="PekoPlayer">
+<meta name="peko-release" content="@RELEASE@">
+<meta name="description" content="Browser-native video player with on-device transcript search, WebGL2 effects, and multi-view tiling.">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>PekoPlayer</title>
+<!-- @styles -->
+</head>
+<body>
+
+<a class="skip-link" href="#stage">Skip to player</a>
+<div id="srStatus" class="sr-only" role="status" aria-live="polite"></div>
+<div id="srAlert" class="sr-only" role="alert" aria-live="assertive"></div>
+
+<div class="app" id="app">
+  <header class="topbar" id="topbar">
+    <div class="topbar-brand">
+      <span class="brand-mark" aria-hidden="true"><img src="icons/icon-64.png" width="24" height="24" alt="" decoding="async"></span>
+      <span class="brand-name">Peko<span class="brand-accent">Player</span></span>
+    </div>
+    <div class="topbar-actions">
+      <button class="ghost-btn" id="openBtn" aria-label="Open video files" aria-keyshortcuts="O" data-tip="Open (O)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
+        <span class="tb-btn-label">Open</span>
+      </button>
+      <button class="ghost-btn" id="openFolderBtn" aria-label="Open folder" hidden data-tip="Open folder">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+        <span class="tb-btn-label">Folder</span>
+      </button>
+      <button class="ghost-btn" id="searchToggleBtn" aria-label="Search transcript and chapters" aria-expanded="false" aria-controls="searchPanel" aria-keyshortcuts="/" data-tip="Search (/)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span class="tb-btn-label">Search</span>
+      </button>
+      <button class="ghost-btn" id="playlistToggleBtn" aria-expanded="false" aria-controls="playlistPanel" aria-label="Toggle playlist" aria-keyshortcuts="Q" data-tip="Playlist (Q)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>
+        <span class="tb-btn-label">Playlist</span>
+        <span class="tb-count" id="playlistCount" hidden>0</span>
+      </button>
+      <button class="ghost-btn" id="multiviewOpenBtn" aria-label="Open Multi-View wall" aria-keyshortcuts="V" data-tip="Multi-View (V)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        <span class="tb-btn-label">Multi-View</span>
+      </button>
+      <button class="ghost-btn icon-only" id="helpBtn" aria-label="Keyboard shortcuts" aria-haspopup="dialog" data-tip="Shortcuts (?)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </button>
+      <button class="ghost-btn icon-only" id="topbarHideBtn" aria-label="Hide top bar" aria-expanded="true" aria-controls="topbar" data-tip="Hide top bar">
+        {{icon:chevron-up:15}}
+      </button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <aside class="search-panel" id="searchPanel" aria-label="Transcript and chapters" aria-hidden="true">
+      <div class="panel-head panel-head-tabs">
+        <div class="segmented-tabs" role="tablist">
+          <button class="search-tab active" data-tab="search" role="tab" aria-selected="true">Transcript</button>
+          <button class="search-tab" data-tab="chapters" role="tab" aria-selected="false">Chapters</button>
+        </div>
+        <button class="icon-btn icon-only" id="transcriptSyncBtn" aria-label="Toggle sync" aria-pressed="false" data-tip="Sync">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        </button>
+        <button class="icon-btn icon-only" id="searchPanelCloseBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="search-bar-row"><input type="search" id="searchInput" placeholder="Search transcript or chapters…" aria-label="Search" autocomplete="off" spellcheck="false"></div>
+      <div class="search-status" id="searchStatus"></div>
+      <div class="search-tab-content" data-tab="search" style="flex:1;min-height:0"><ul class="search-results" id="searchResults"></ul></div>
+      <div class="search-tab-content" data-tab="chapters" hidden style="flex:1;min-height:0"><ul class="chapter-list" id="chapterList"></ul></div>
+    </aside>
+
+    <main class="stage" id="stage">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg></div>
+        <h1>Drop a video to start playing</h1>
+        <p>Or choose files from your device. Nothing leaves your browser.</p>
+        <label class="file-label" for="fileInput">Choose video files</label>
+        <p class="empty-sub">MP4 · WebM · OGG · MOV · MKV · 3GP</p>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg></div>
+        <h3>Drop to add to playlist</h3>
+      </div>
+
+      <video id="video" preload="metadata" playsinline></video>
+      <canvas class="shader-canvas" id="shaderCanvas" hidden></canvas>
+      <div class="stage-title" id="stageTitle" aria-hidden="true"></div>
+      <div class="loading" id="loading" hidden><div class="spinner"></div><div>Loading…</div></div>
+
+      <div class="resume-toast" id="resumeToast" hidden>
+        <span id="resumeText">Resume from 0:00?</span>
+        <div class="resume-toast-actions">
+          <button id="resumeYes">Resume</button>
+          <button id="resumeNo">Start over</button>
+          <span class="resume-countdown" id="resumeCountdown" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="center-flash" id="centerFlash" aria-hidden="true">
+        <span class="center-flash-icon" id="centerFlashIcon"></span>
+        <span class="center-flash-label" id="centerFlashLabel"></span>
+      </div>
+
+      <div class="action-badge" id="actionBadge" aria-hidden="true">
+        <span class="action-badge-icon" id="actionBadgeIcon"></span>
+        <span class="action-badge-text">
+          <span class="action-badge-label" id="actionBadgeLabel"></span>
+          <span class="action-badge-value" id="actionBadgeValue"></span>
+        </span>
+      </div>
+
+      <div class="hold-speed-badge" id="holdSpeedBadge" hidden><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg><span id="holdSpeedText">2×</span></div>
+      <div class="silence-skip-badge" id="silenceSkipBadge" hidden><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"/></svg><span>Skipping silence</span></div>
+
+      <div class="ab-loop-badge" id="abLoopBadge" hidden aria-hidden="true">
+        <span class="ab-dot"></span><span class="ab-range-tag">A→B</span>
+        <span class="ab-time" id="abLoopBadgeElapsed">0:00</span><span class="ab-sep">/</span>
+        <span class="ab-time" id="abLoopBadgeTotal">0:00</span>
+        <span class="ab-remaining" id="abLoopBadgeRemaining">· 0:00 left</span>
+      </div>
+
+      <div class="volume-overlay" id="volumeOverlay" aria-hidden="true">
+        <div class="volume-overlay-icon" id="volumeIcon"></div>
+        <div class="volume-overlay-bar"><div class="volume-overlay-mark"></div><div class="volume-overlay-fill" id="volumeFill"></div></div>
+        <div class="volume-overlay-text" id="volumeText">100</div>
+      </div>
+
+      <div class="captions-cue" id="captionsCue" aria-hidden="true"></div>
+
+      <div class="playlist-carousel" id="playlistCarousel" hidden aria-hidden="true" aria-label="Playlist carousel" data-look="frost">
+        <div class="plc-shell">
+          <div class="plc-head">
+            <div class="plc-head-left">
+              <button class="plc-title" id="plcTitleBtn" aria-haspopup="menu" aria-expanded="false">
+                <span id="plcTitleText">Playlist</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <select class="plc-sort" id="plcSort" aria-label="Sort playlist">
+                <option value="manual">Manual</option>
+                <option value="name">Name</option>
+                <option value="duration">Duration</option>
+                <option value="size">Size</option>
+                <option value="added">Recent</option>
+                <option value="shuffle">Shuffle</option>
+              </select>
+              <div class="plc-list-popup" id="plcListPopup" role="menu" hidden>
+                <div class="plc-list-search">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  <input type="search" id="plcListSearch" placeholder="Search playlist" aria-label="Search playlist">
+                </div>
+                <ul class="plc-list" id="plcList" role="listbox"></ul>
+              </div>
+            </div>
+            <div class="plc-head-actions">
+              <button class="icon-btn icon-only" id="plcShuffleBtn" aria-pressed="false" aria-label="Shuffle" data-tip="Shuffle">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg>
+              </button>
+              <button class="icon-btn icon-only" id="plcAddBtn" aria-label="Add files" data-tip="Add files"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+              <button class="icon-btn icon-only" id="plcClearBtn" aria-label="Clear playlist" data-tip="Clear"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+              <button class="icon-btn icon-only" id="plcCloseBtn" aria-label="Close" data-tip="Close"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+            </div>
+          </div>
+          <div class="plc-body">
+            <button class="plc-nav" id="plcPrevBtn" aria-label="Scroll left">‹</button>
+            <div class="plc-track" id="plcTrack" role="list"></div>
+            <button class="plc-nav" id="plcNextBtn" aria-label="Scroll right">›</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls" id="controls">
+        <div class="control-bar" id="controlBar" data-layout="minimal" data-look="frost">
+          <div class="cb-top">
+            <div class="volume-container">
+              <button class="btn" id="muteBtn" data-tip="Mute (M)" aria-label="Mute" aria-keyshortcuts="M">
+                <svg class="vol-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>
+                  <path class="vol-wave-1" d="M16 9a5 5 0 0 1 0 6"/><path class="vol-wave-2" d="M19.364 18.364a9 9 0 0 0 0-12.728"/>
+                  <g class="vol-mute-x" hidden><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></g>
+                </svg>
+              </button>
+              <input type="range" class="volume-slider" id="volumeSlider" min="0" max="200" value="100" step="1" aria-label="Volume">
+            </div>
+            <div class="cb-transport">
+              <button class="btn" id="prevBtn" data-tip="Previous (Shift+N)" aria-label="Previous in playlist"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" x2="5" y1="19" y2="5"/></svg></button>
+              <button class="btn" id="rewindBtn" data-tip="Rewind 10s (←)" aria-label="Rewind 10s"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+              <button class="btn btn-play" id="playBtn" data-tip="Play/Pause (Space)" aria-label="Play" aria-keyshortcuts="Space">
+                <svg class="icon-play" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" hidden><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+              </button>
+              <button class="btn" id="forwardBtn" data-tip="Forward 10s (→)" aria-label="Forward 10s"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
+              <button class="btn" id="nextBtn" data-tip="Next (N)" aria-label="Next in playlist"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
+            </div>
+            <div class="cb-minimal-time"><span id="currentTimeMini">0:00</span><span class="cb-mini-sep">/</span><span id="durationMini">0:00</span></div>
+            <div class="cb-actions">
+              <button class="btn" id="settingsBtn" data-tip="Settings" aria-label="Settings" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button class="btn" id="playlistQuickBtn" data-tip="Playlist (Q)" aria-label="Playlist" aria-keyshortcuts="Q">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>
+              </button>
+              <button class="btn btn-speed" id="speedBtn" aria-label="Playback speed">1×</button>
+              <button class="btn" id="captionsBtn" data-tip="Subtitles (C)" aria-label="Subtitles" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="5" rx="2" ry="2"/><path d="M7 15h4M15 15h2M7 11h2M13 11h4"/></svg></button>
+              <button class="btn" id="pipQuickBtn" data-tip="Picture-in-Picture (P)" aria-label="Picture-in-Picture"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h6V4"/><path d="m2 4 6 6"/><path d="M21 10V7a2 2 0 0 0-2-2h-7"/><path d="M3 14v2a2 2 0 0 0 2 2h3"/><rect x="12" y="14" width="10" height="8" rx="1"/></svg></button>
+              <button class="btn" id="fullscreenBtn" data-tip="Fullscreen (F)" aria-label="Fullscreen" aria-keyshortcuts="F"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+            </div>
+          </div>
+          <div class="cb-bottom">
+            <span class="cb-time" id="currentTime" role="button" tabindex="0" aria-label="Elapsed time — click to toggle">0:00</span>
+            <div class="scrubber" id="progressContainer" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0:00 of 0:00">
+              <div class="scrubber-buffered" id="bufferedBar"></div>
+              <div class="scrubber-fill" id="progressBar"></div>
+              <div class="scrubber-ab-range" id="abLoopRange" hidden><span class="scrubber-ab-duration" id="abLoopDuration"></span></div>
+              <div class="scrubber-marker a" id="abMarkerA" hidden></div>
+              <div class="scrubber-marker b" id="abMarkerB" hidden></div>
+              <div class="scrubber-bookmarks" id="bookmarkLayer"></div>
+              <div class="scrubber-handle" id="progressHandle"></div>
+              <div class="scrubber-tooltip" id="progressTooltip"><canvas class="scrubber-thumb" id="progressThumb" width="152" height="86" hidden></canvas><span id="progressTooltipTime">0:00</span></div>
+            </div>
+            <span class="cb-time" id="duration" role="button" tabindex="0" aria-label="Remaining time — click to toggle">0:00</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="playlist-panel" id="playlistPanel" aria-label="Playlist" aria-hidden="true">
+      <div class="panel-head">
+        <h2 class="panel-title">Playlist</h2>
+        <div class="panel-head-actions">
+          <button class="icon-btn icon-only" id="playlistShuffleBtn" aria-pressed="false" aria-label="Shuffle" data-tip="Shuffle"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg></button>
+          <button class="icon-btn icon-only" id="playlistAddBtn" aria-label="Add files" data-tip="Add files"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+          <button class="icon-btn text-btn" id="playlistClearBtn" aria-label="Clear playlist">Clear</button>
+          <button class="icon-btn icon-only" id="playlistCloseBtn" aria-label="Close" data-tip="Close"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+      </div>
+      <div class="panel-toolbar">
+        <div class="panel-search">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" id="playlistSearch" placeholder="Search" aria-label="Search playlist">
+        </div>
+        <select id="playlistSort" aria-label="Sort playlist"><option value="manual">Manual</option><option value="name">Name</option><option value="duration">Duration</option><option value="size">Size</option><option value="added">Recent</option><option value="shuffle">Shuffle</option></select>
+      </div>
+      <div class="playlist-stats" id="playlistStats" hidden></div>
+      <ul class="playlist-list" id="playlistItems" role="listbox" aria-label="Video queue"></ul>
+      <div class="playlist-empty panel-empty" id="playlistEmpty">
+        <div class="panel-empty-glyph"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg></div>
+        <div class="panel-empty-title">Queue is empty</div>
+        <div class="panel-empty-desc">Add video files to build your playlist. Drop files anywhere on the stage.</div>
+        <label class="file-label" for="fileInput" style="padding: 8px 16px; font-size: 12px;">Add files</label>
+      </div>
+    </aside>
+  </div>
+
+  <select id="speedSelect" hidden aria-hidden="true"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select>
+
+  <div class="captions-menu" id="captionsMenu" data-look="frost" role="menu" hidden>
+    <button role="menuitemradio" data-track="off" class="cm-item active">Off</button>
+    <div class="cm-empty" id="captionsEmpty">No external subtitle tracks</div>
+    <div class="cm-list" id="captionsList"></div>
+    <div class="cm-list" id="embeddedTextList"></div>
+    <label class="cm-upload" for="subtitleInput"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Load subtitle file (.vtt / .srt)</label>
+    <a class="cm-upload" id="searchSubsBtn" href="#" rel="noopener noreferrer" target="_blank"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search on OpenSubtitles</a>
+    <button class="cm-upload" id="capSubtitleSettingsBtn" type="button"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>Subtitle settings</button>
+  </div>
+
+  <div class="speed-menu" id="speedMenu" data-look="frost" role="menu" hidden>
+    <button role="menuitemradio" data-speed="0.25">0.25×</button><button role="menuitemradio" data-speed="0.5">0.5×</button><button role="menuitemradio" data-speed="0.75">0.75×</button>
+    <button role="menuitemradio" data-speed="1" class="active">1×</button><button role="menuitemradio" data-speed="1.25">1.25×</button><button role="menuitemradio" data-speed="1.5">1.5×</button>
+    <button role="menuitemradio" data-speed="1.75">1.75×</button><button role="menuitemradio" data-speed="2">2×</button>
+  </div>
+
+  <div class="subtitle-settings-popover" id="subtitleSettingsPopover" data-look="frost" hidden>
+    <div class="settings-section">
+      <div class="settings-section-title">Rendering</div>
+      <div class="settings-toggle-row" id="subNativeRow" role="checkbox" aria-checked="false" tabindex="0"><div><div class="settings-toggle-label">Use native subtitles</div><div class="settings-toggle-desc">Browser engine; disables appearance options.</div></div><span class="toggle-switch" aria-hidden="true"></span></div>
+      <div class="settings-toggle-row" id="subPastelRow" role="checkbox" aria-checked="false" tabindex="0"><div><div class="settings-toggle-label">Pastel mode</div></div><span class="toggle-switch" aria-hidden="true"></span></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-title">Delay <span id="subDelayValue">0.0 s</span></div>
+      <div style="padding: 0 10px 6px;"><input type="range" id="subDelaySlider" min="-10" max="10" step="0.1" value="0" style="width:100%"></div>
+      <div class="delay-control" style="margin: 0 10px 8px;">
+        <button id="subDelayEarlier" type="button"><span class="delay-btn-arrow">‹</span><span>Heard</span></button>
+        <div class="delay-value-box"><span id="subDelayBoxValue">0.0</span><span style="margin-left:2px;opacity:0.6">s</span></div>
+        <button id="subDelayLater" type="button"><span class="delay-btn-arrow">›</span><span>Saw</span></button>
+      </div>
+    </div>
+    <div class="settings-section"><div class="settings-section-title">Font</div><div class="font-row" id="capFontGroup" role="radiogroup"><button type="button" data-font="inter" class="active">Inter</button><button type="button" data-font="serif">Serif</button><button type="button" data-font="mono">Mono</button><button type="button" data-font="rounded">Rounded</button></div></div>
+    <div class="settings-section"><div class="settings-section-title">Size <span id="capSizeValue">100%</span></div><div style="padding: 0 10px 8px;"><input type="range" id="capSizeSlider" min="50" max="200" step="5" value="100" style="width:100%"></div></div>
+    <div class="settings-section"><div class="settings-section-title">Position <span id="capPositionValue">Default</span></div><div style="padding: 0 10px 8px;"><input type="range" id="capPositionSlider" min="2" max="80" step="1" value="12" style="width:100%"></div></div>
+    <div class="settings-section"><div class="settings-toggle-row" id="capBgToggleRow" role="checkbox" aria-checked="true" tabindex="0" style="padding: 8px 10px;"><div><div class="settings-toggle-label">Background</div></div><span class="toggle-switch" aria-hidden="true"></span></div></div>
+    <div class="settings-section">
+      <div class="settings-section-title">Color</div>
+      <div class="color-swatches" id="capColorSwatches" role="radiogroup">
+        <button type="button" data-color="#ffffff" class="active" style="--swatch:#ffffff" aria-label="White"></button>
+        <button type="button" data-color="#ffeb3b" style="--swatch:#ffeb3b" aria-label="Yellow"></button>
+        <button type="button" data-color="#00e5ff" style="--swatch:#00e5ff" aria-label="Cyan"></button>
+        <button type="button" data-color="#69f0ae" style="--swatch:#69f0ae" aria-label="Green"></button>
+        <button type="button" data-color="#FF6B00" style="--swatch:#FF6B00" aria-label="Orange"></button>
+        <button type="button" class="picker" aria-label="Custom color"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg><input type="color" id="capColorPicker" value="#ffffff" aria-label="Custom subtitle color"></button>
+      </div>
+    </div>
+    <button class="cm-upload" id="capStyleResetBtn" style="justify-content:center;border-top:none">Reset to defaults</button>
+  </div>
+
+  <div class="settings-menu" id="settingsMenu" data-look="frost" role="menu" hidden>
+    <div class="settings-page" data-settings-page="main">
+      <div class="settings-section">
+        <div class="settings-section-title">Playback</div>
+        <div class="settings-row"><span>Loop</span><div class="settings-segment" role="radiogroup" aria-label="Loop mode"><button type="button" data-loop="off" class="active">Off</button><button type="button" data-loop="all">All</button><button type="button" data-loop="one">One</button></div></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Sleep timer</div>
+        <div class="settings-segment" id="sleepMenu" style="margin:2px 6px 6px;" role="radiogroup"><button type="button" data-sleep="off" class="active">Off</button><button type="button" data-sleep="15">15m</button><button type="button" data-sleep="30">30m</button><button type="button" data-sleep="45">45m</button><button type="button" data-sleep="end">End</button></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Video fit</div>
+        <div class="settings-row settings-row-stack">
+          <div class="settings-segment" role="radiogroup" id="videoFitGroup"><button type="button" data-fit="none" class="active">Original</button><button type="button" data-fit="contain">Fit</button><button type="button" data-fit="cover">Fill</button><button type="button" data-fit="fill">Stretch</button></div>
+          <div class="settings-segment" role="radiogroup" id="videoRatioGroup" aria-label="Video aspect ratio override"><button type="button" data-ratio="auto" class="active">Auto</button><button type="button" data-ratio="16:9">16:9</button><button type="button" data-ratio="4:3">4:3</button><button type="button" data-ratio="21:9">21:9</button></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Brightness <span id="brightnessValue">100%</span></div>
+        <div style="padding: 0 10px 8px;"><input type="range" id="brightnessSlider" min="50" max="200" step="5" value="100" aria-label="Brightness"></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Video effects</div>
+        <button class="settings-item settings-nav-item" id="fxNavBtn" data-settings-nav="fx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg><span class="settings-label">Adjust color &amp; tone</span><span class="settings-value" id="fxNavValue">Off</span><svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Audio</div>
+        <div class="settings-row" id="audioTrackRow" hidden><span>Audio track</span><select class="settings-select" id="audioTrackSelect" aria-label="Audio track"></select></div>
+        <button class="settings-item settings-nav-item" id="eqNavBtn" data-settings-nav="eq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="9" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="7" cy="18" r="2" fill="currentColor" stroke="none"/></svg><span class="settings-label">Equalizer</span><span class="settings-value" id="eqNavValue">Flat</span><svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+        <button class="settings-item" id="moreSilenceSkipBtn" role="menuitemcheckbox" aria-checked="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"/></svg><span class="settings-label">Skip silence</span><span class="toggle-switch" aria-hidden="true"></span></button>
+        <div class="eq-row" id="silenceSkipRow" hidden><label for="silenceThreshold">Level</label><input type="range" id="silenceThreshold" min="-60" max="-25" step="1" value="-45"><span id="silenceThresholdValue">-45dB</span></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Tools</div>
+        <button class="settings-item" id="moreScreenshotBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg><span class="settings-label">Screenshot</span><kbd>S</kbd></button>
+        <button class="settings-item" id="moreRotateBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg><span class="settings-label">Rotate video</span><kbd>R</kbd></button>
+        <button class="settings-item" id="abLoopBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 9v6M9 9h1.5a1.5 1.5 0 0 1 0 3H9m0 0h1.8a1.5 1.5 0 0 1 0 3H9M15 9v6h2.5"/></svg><span class="settings-label">A/B loop</span><span class="settings-value" id="abLoopValue">—</span></button>
+        <button class="settings-item" id="bookmarkBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg><span class="settings-label">Add bookmark</span><kbd>Shift+M</kbd></button>
+        <button class="settings-item" id="moreStepBackBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="4"/><polygon points="14 20 4 12 14 4 14 20"/></svg><span class="settings-label">Step back frame</span><kbd>,</kbd></button>
+        <button class="settings-item" id="moreStepForwardBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="6" y1="4" y2="20"/><polygon points="10 4 20 12 10 20 10 4"/></svg><span class="settings-label">Step forward frame</span><kbd>.</kbd></button>
+        <button class="settings-item" id="castBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a9 9 0 0 1 8 8"/><path d="M2 16a5 5 0 0 1 4 4"/><line x1="2" x2="2.01" y1="20" y2="20"/></svg><span class="settings-label">Cast to device</span></button>
+      </div>
+      <div class="settings-section">
+        <button class="settings-item settings-nav-item" id="interfaceNavBtn" data-settings-nav="interface"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg><span class="settings-label">Interface</span><svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+    <div class="settings-page" data-settings-page="fx" hidden>
+      <button class="settings-back-btn" data-settings-back type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span>Video effects</span></button>
+      <div class="settings-section">
+        <div class="settings-row"><span>Current effect</span><span class="settings-value" id="fxCurrentValue">Off</span></div>
+        <div class="settings-toggle-row" id="fxToggleRow" role="checkbox" aria-checked="false" tabindex="0"><div><div class="settings-toggle-label">Enable effects</div><div class="settings-toggle-desc">Apply the color adjustments below to the video.</div></div><span class="toggle-switch" id="fxState" aria-hidden="true"></span></div>
+        <div class="settings-sub">
+          <div class="settings-slider"><label for="fxPreset">Preset</label><select class="settings-select" id="fxPreset" style="width:100%" aria-label="Effects preset"><option value="none">Neutral</option><option value="vivid">Vivid</option><option value="cinematic">Cinematic</option><option value="warm">Warm</option><option value="cool">Cool</option><option value="film">Film</option><option value="mono">Mono</option><option value="sharp">Sharp</option><option value="custom">Custom</option></select></div>
+          <div class="settings-slider"><label for="fxExposure"><span>Exposure</span><span id="fxExposureValue">0.00</span></label><input type="range" id="fxExposure" min="-2" max="2" step="0.05" value="0"></div>
+          <div class="settings-slider"><label for="fxContrast"><span>Contrast</span><span id="fxContrastValue">1.00</span></label><input type="range" id="fxContrast" min="0.5" max="2" step="0.02" value="1"></div>
+          <div class="settings-slider"><label for="fxSaturation"><span>Saturation</span><span id="fxSaturationValue">1.00</span></label><input type="range" id="fxSaturation" min="0" max="2" step="0.02" value="1"></div>
+          <div class="settings-slider"><label for="fxTemperature"><span>Temperature</span><span id="fxTemperatureValue">0.00</span></label><input type="range" id="fxTemperature" min="-1" max="1" step="0.02" value="0"></div>
+          <div class="settings-slider"><label for="fxTint"><span>Tint</span><span id="fxTintValue">0.00</span></label><input type="range" id="fxTint" min="-1" max="1" step="0.02" value="0"></div>
+          <div class="settings-slider"><label for="fxSharpen"><span>Sharpen</span><span id="fxSharpenValue">0.00</span></label><input type="range" id="fxSharpen" min="0" max="1" step="0.02" value="0"></div>
+          <div class="settings-slider"><label for="fxVignette"><span>Vignette</span><span id="fxVignetteValue">0.00</span></label><input type="range" id="fxVignette" min="0" max="1" step="0.02" value="0"></div>
+          <button class="cm-upload" id="fxResetBtn" style="border-top:none">Reset effects</button>
+        </div>
+      </div>
+    </div>
+    <div class="settings-page" data-settings-page="eq" hidden>
+      <button class="settings-back-btn" data-settings-back type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span>Equalizer</span></button>
+      <div class="settings-section">
+        <div class="settings-row"><span>Preset</span><select class="settings-select" id="eqPreset" aria-label="EQ preset"></select></div>
+        <div class="eq-row"><label for="eqBass">Bass</label><input type="range" id="eqBass" min="-12" max="12" step="1" value="0"><span id="eqBassValue">0dB</span></div>
+        <div class="eq-row"><label for="eqMid">Mid</label><input type="range" id="eqMid" min="-12" max="12" step="1" value="0"><span id="eqMidValue">0dB</span></div>
+        <div class="eq-row"><label for="eqTreble">Treble</label><input type="range" id="eqTreble" min="-12" max="12" step="1" value="0"><span id="eqTrebleValue">0dB</span></div>
+      </div>
+    </div>
+    <div class="settings-page" data-settings-page="interface" hidden>
+      <button class="settings-back-btn" data-settings-back type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span>Interface</span></button>
+      <div class="settings-section">
+        <div class="settings-section-title">Accent color</div>
+        <div class="color-swatches" id="themeSwatches" role="radiogroup" aria-label="Accent color">
+          <button type="button" data-theme="#FF6B00" style="--swatch:#FF6B00" class="active" aria-label="Orange"></button>
+          <button type="button" data-theme="#3B82F6" style="--swatch:#3B82F6" aria-label="Blue"></button>
+          <button type="button" data-theme="#10B981" style="--swatch:#10B981" aria-label="Green"></button>
+          <button type="button" data-theme="#8B5CF6" style="--swatch:#8B5CF6" aria-label="Purple"></button>
+          <button type="button" data-theme="#EC4899" style="--swatch:#EC4899" aria-label="Pink"></button>
+          <button type="button" data-theme="#EF4444" style="--swatch:#EF4444" aria-label="Red"></button>
+          <button type="button" data-theme="#14B8A6" style="--swatch:#14B8A6" aria-label="Teal"></button>
+          <button type="button" data-theme="#FFFFFF" style="--swatch:#FFFFFF" aria-label="White"></button>
+          <button type="button" class="picker" aria-label="Custom accent color"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg><input type="color" id="themePicker" value="#FF6B00" aria-label="Custom accent color"></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Control bar</div>
+        <div class="settings-row settings-row-stack"><span>Control bar layout</span><div class="settings-segment" role="radiogroup" id="controlLayoutGroup" aria-label="Control bar layout"><button type="button" data-layout="standard">Classic</button><button type="button" data-layout="classic">Compact</button><button type="button" data-layout="minimal" class="active">Capsule</button></div></div>
+        <div class="settings-row settings-row-stack"><span>Control bar look</span><div class="settings-segment" role="radiogroup" id="controlLookGroup" aria-label="Control bar look"><button type="button" data-look="frost" class="active">Frost</button><button type="button" data-look="glass">Glass</button><button type="button" data-look="solid">Solid</button></div></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Playlist</div>
+        <div class="settings-toggle-row" id="playlistBtnPlacementRow" role="checkbox" aria-checked="true" tabindex="0">
+          <div>
+            <div class="settings-toggle-label">Playlist button in control bar</div>
+            <div class="settings-toggle-desc">Moves the Playlist button from the top bar into the playback controls.</div>
+          </div>
+          <span class="toggle-switch" aria-hidden="true"></span>
+        </div>
+        <div class="settings-row settings-row-stack">
+          <span>Playlist style</span>
+          <div class="settings-segment" role="radiogroup" id="playlistStyleGroup" aria-label="Playlist style">
+            <button type="button" data-plstyle="sidebar">Sidebar</button>
+            <button type="button" data-plstyle="carousel" class="active">Carousel</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Accessibility</div>
+        <div class="settings-toggle-row" id="reduceMotionRow" role="checkbox" aria-checked="false" tabindex="0"><div><div class="settings-toggle-label">Reduce motion</div><div class="settings-toggle-desc">Minimize animations throughout the interface.</div></div><span class="toggle-switch" aria-hidden="true"></span></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Behavior</div>
+        <div class="settings-toggle-row" id="showTitleRow" role="checkbox" aria-checked="true" tabindex="0"><div><div class="settings-toggle-label">Show title on hover</div><div class="settings-toggle-desc">Displays the current video name at the top of the stage.</div></div><span class="toggle-switch" aria-hidden="true"></span></div>
+        <div class="settings-toggle-row" id="compactSpeedRow" role="checkbox" aria-checked="false" tabindex="0"><div><div class="settings-toggle-label">Compact speed button</div><div class="settings-toggle-desc">Click to cycle speeds. Right-click for the menu.</div></div><span class="toggle-switch" aria-hidden="true"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="shortcutsModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head"><h2>Keyboard Shortcuts</h2><button class="modal-close" id="shortcutsCloseBtn" aria-label="Close"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+      <div class="shortcut-grid">
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:play:16}}Play / Pause</span><kbd>Space</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:fast-forward:16}}Hold to play at 2×</span><kbd>Hold Space</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:arrow-left-right:16}}Seek forward / back</span><kbd>→ / ←</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:volume-2:16}}Volume up / down</span><kbd>↑ / ↓</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:volume-x:16}}Mute</span><kbd>M</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:bookmark:16}}Add bookmark</span><kbd>Shift+M / B</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:skip-forward:16}}Next / Previous</span><kbd>N / Shift+N</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:repeat:16}}Cycle loop mode</span><kbd>L</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:palette:16}}Cycle video effects</span><kbd>G</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:captions:16}}Toggle captions</span><kbd>C</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:camera:16}}Screenshot</span><kbd>S</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:rotate-cw:16}}Rotate video</span><kbd>R</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:step-forward:16}}Frame step (paused)</span><kbd>, / .</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:brackets:16}}Set A/B loop point</span><kbd>A</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:percent:16}}Jump to 0–90%</span><kbd>0–9</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:zoom-in:16}}Zoom in / out</span><kbd>+ / −</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:scan:16}}Reset zoom</span><kbd>Z</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:maximize:16}}Fullscreen</span><kbd>F</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:picture-in-picture:16}}Picture-in-Picture</span><kbd>P</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:folder-open:16}}Open files</span><kbd>O</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:list-music:16}}Toggle playlist</span><kbd>Q</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:search:16}}Search / Chapters</span><kbd>/</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:layout-dashboard:16}}Multi-View</span><kbd>V</kbd></div>
+        <div class="shortcut-item"><span class="shortcut-label">{{icon:circle-help:16}}This menu</span><kbd>?</kbd></div>
+      </div>
+      <p class="shortcut-note">Workers handle transcript indexing, thumbnail encoding, and shader rendering. Drop a yt-dlp <code>.info.json</code> alongside a video to auto-import chapters.</p>
+    <button class="ghost-btn modal-action" id="installPwaBtn" aria-label="Install app" data-tip="Install app" hidden>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        <span class="tb-btn-label">Install web app</span>
+      </button>
+      <button class="ghost-btn modal-action" id="openWithBtn" aria-label="Add to Open with" data-tip="Add to Open with" hidden>
+        {{icon:folder-open:15}}
+        <span class="tb-btn-label">Add to “Open with”</span>
+      </button>
+    </div>
+  </div>
+  <button class="topbar-reveal" id="topbarRevealBtn" aria-label="Show top bar" data-tip="Show top bar" hidden>
+    {{icon:chevron-down:15}}
+  </button>
+</div>
+
+<section class="mv-view" id="mvView" data-look="frost" hidden aria-label="Multi-View">
+  <header class="mv-toolbar" id="mvToolbar" data-look="frost">
+    <div class="mv-cluster mv-cluster-left">
+      <button class="icon-btn mv-back-anchor" id="mvBackBtn" aria-label="Back to player"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span class="mv-back-name">PekoPlayer</span><span class="mv-back-sep">/</span><span class="mv-back-mode">Multi-View</span></button>
+      <div class="mv-ingest">
+        <label class="icon-btn" for="mvFileInput" data-tip="Add local video"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span class="mv-ingest-label">Local</span></label>
+        <button class="icon-btn" id="mvFolderBtn" hidden data-tip="Add folder"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="mv-ingest-label">Folder</span></button>
+        <form class="mv-url-form" id="mvYtForm" novalidate>
+          <input type="text" id="mvYtInput" placeholder="Paste YT URL…" aria-label="Stream URL" inputmode="url" autocomplete="off" spellcheck="false">
+          <button type="submit" class="mv-url-submit" id="mvYtAddBtn" aria-label="Add URL" data-tip="Add stream"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></button>
+        </form>
+      </div>
+    </div>
+    <div class="mv-cluster mv-cluster-center">
+      <div class="mv-segmented" role="tablist">
+        <button class="mv-seg" data-layout="grid" role="tab" aria-selected="true">Grid</button>
+        <button class="mv-seg" data-layout="split" role="tab" aria-selected="false">Split</button>
+        <button class="mv-seg" data-layout="canvas" role="tab" aria-selected="false">Canvas</button>
+        <div class="mv-seg-divider" id="mvSegDivider"></div>
+        <div class="mv-cols-stepper" id="mvColsStepper"><button id="mvColsMinus" aria-label="Fewer columns" data-tip="Fewer columns">−</button><span id="mvColsValue">2</span><button id="mvColsPlus" aria-label="More columns" data-tip="More columns">+</button></div>
+      </div>
+    </div>
+    <div class="mv-cluster mv-cluster-right">
+      <button class="icon-btn" id="mvPlayPauseAllBtn" aria-label="Play all" data-tip="Play all"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></button>
+      <button class="icon-btn" id="mvMuteAllBtn" aria-pressed="false" aria-label="Mute all" data-tip="Mute all"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg></button>
+      <button class="icon-btn" id="mvSyncStartBtn" aria-label="Restart all from start" data-tip="Restart all from start"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"/></svg></button>
+      <div class="popover">
+        <button class="icon-btn" id="mvSleepBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Sleep timer" data-tip="Sleep timer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span class="mv-btn-label">Sleep</span></button>
+        <div class="mv-popover-menu" id="mvSleepMenu" data-look="frost" role="menu" hidden><div class="settings-segment" style="margin:4px;" role="radiogroup"><button type="button" data-sleep="off" class="active">Off</button><button type="button" data-sleep="15">15m</button><button type="button" data-sleep="30">30m</button><button type="button" data-sleep="45">45m</button><button type="button" data-sleep="60">60m</button></div></div>
+      </div>
+      <div class="popover">
+        <button class="icon-btn" id="mvEqBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Equalizer" data-tip="Equalizer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="9" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="7" cy="18" r="2" fill="currentColor" stroke="none"/></svg><span class="mv-btn-label">EQ</span></button>
+        <div class="mv-popover-menu" id="mvEqMenu" data-look="frost" role="menu" hidden>
+          <div class="settings-row"><span>Preset</span><select id="mvEqPreset" class="settings-select" aria-label="MV EQ preset"></select></div>
+          <div class="eq-row"><label for="mvEqBass">Bass</label><input type="range" id="mvEqBass" min="-12" max="12" step="1" value="0"><span id="mvEqBassValue">0dB</span></div>
+          <div class="eq-row"><label for="mvEqMid">Mid</label><input type="range" id="mvEqMid" min="-12" max="12" step="1" value="0"><span id="mvEqMidValue">0dB</span></div>
+          <div class="eq-row"><label for="mvEqTreble">Treble</label><input type="range" id="mvEqTreble" min="-12" max="12" step="1" value="0"><span id="mvEqTrebleValue">0dB</span></div>
+          <button class="cm-upload" id="mvEqResetBtn">Reset EQ</button>
+        </div>
+      </div>
+      <button class="icon-btn danger" id="mvClearAllBtn" aria-label="Clear all" data-tip="Clear all"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      <span class="mv-divider"></span>
+      <button class="icon-btn icon-only" id="mvHideBarBtn" aria-label="Hide toolbar" data-tip="Hide toolbar"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
+      <button class="icon-btn icon-only" id="mvFullscreenBtn" aria-label="Fullscreen" data-tip="Fullscreen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    </div>
+  </header>
+  <button class="mv-bar-tab" id="mvBarTab" aria-label="Show toolbar"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+  <div class="mv-canvas mv-mode-grid" id="mvCanvas">
+    <div class="mv-empty" id="mvEmpty">
+      <div class="mv-empty-glyph"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></div>
+      <h2>Build a viewing wall</h2>
+      <p>Add local videos, folders, or paste stream URLs above.</p>
+    </div>
+  </div>
+</section>
+
+<input type="file" id="fileInput" class="visually-hidden-input" accept="video/mp4,video/webm,video/ogg,video/x-matroska,.mkv,.mp4,.webm,.ogg,.ogv,.mov,.m4v,.3gp,.ts,.srt,.vtt,.json" multiple>
+<input type="file" id="subtitleInput" class="visually-hidden-input" accept=".vtt,.srt">
+<input type="file" id="mvFileInput" class="visually-hidden-input" accept="video/mp4,video/webm,video/ogg,video/x-matroska,.mkv,.mp4,.webm,.ogg,.ogv,.mov,.m4v,.3gp,.ts" multiple>
+<a id="downloadAnchor" class="visually-hidden-input" href="#"></a>
+
+<!-- @workers -->
+<!-- @scripts -->
+</body>
+</html>

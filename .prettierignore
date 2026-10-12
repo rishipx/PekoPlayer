@@ -1,0 +1,15 @@
+# Generated, vendored or build output
+dist/
+release/
+node_modules/
+desktop/node_modules/
+desktop/web/
+public/fonts/
+src/styles/00-fonts.css
+src/icons/lucide/
+package-lock.json
+desktop/package-lock.json
+
+# Markup and docs keep their hand-written layout (index.html contains build placeholders)
+src/index.html
+*.md

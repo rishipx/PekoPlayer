@@ -1,0 +1,437 @@
+/* Small-screen and reduced-motion overrides */
+
+@media (max-width: 760px) {
+  .playlist-carousel {
+    padding: 0 8px 76px;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  .plc-shell {
+    padding: 12px 14px 14px;
+    border-radius: 14px;
+  }
+  .plc-card {
+    width: 210px;
+  }
+  .plc-name {
+    font-size: 12.5px;
+  }
+  .plc-desc {
+    font-size: 11px;
+  }
+  .plc-nav {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+  .plc-list-popup {
+    width: 320px;
+  }
+  .plc-sort {
+    font-size: 11px;
+    padding: 5px 22px 5px 9px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .search-panel,
+  .playlist-panel {
+    position: fixed;
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    bottom: 0;
+    margin: 0;
+    z-index: 60;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+    width: 320px;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .search-panel {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  .search-panel.open {
+    transform: translateX(0);
+  }
+  .playlist-panel {
+    right: 0;
+    transform: translateX(100%);
+  }
+  .playlist-panel.open {
+    transform: translateX(0);
+  }
+  .topbar-actions .tb-btn .tb-btn-label {
+    display: none;
+  }
+  .tb-btn {
+    padding: 6px 9px;
+  }
+  .mv-back-anchor .mv-back-name,
+  .mv-back-anchor .mv-back-sep {
+    display: none;
+  }
+  .mv-ingest .icon-btn .mv-ingest-label {
+    display: none;
+  }
+  .mv-ingest .icon-btn {
+    padding: 0 7px;
+  }
+  .mv-url-form {
+    max-width: 120px;
+  }
+  .mv-cluster .icon-btn .mv-btn-label {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .controls {
+    padding: 0 10px 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+  .controls.standard-layout {
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .control-bar {
+    border-radius: 18px;
+    padding: 6px 12px 4px;
+    max-width: 100%;
+  }
+  .control-bar[data-layout='classic'] {
+    border-radius: 14px;
+    gap: 6px;
+    padding: 6px 10px;
+    min-height: 44px;
+  }
+  .control-bar[data-layout='classic'] .cb-time {
+    font-size: 10px;
+    min-width: 38px;
+    height: 30px;
+  }
+  .control-bar[data-layout='classic'] .volume-slider {
+    display: none;
+  }
+  .control-bar[data-layout='standard'] {
+    border-radius: 0;
+    gap: 4px;
+    padding: 8px 10px 10px;
+    min-height: 56px;
+  }
+  .control-bar[data-layout='standard'] .btn {
+    width: 34px;
+    height: 34px;
+  }
+  .control-bar[data-layout='standard'] .btn svg {
+    width: 17px;
+    height: 17px;
+  }
+  .control-bar[data-layout='standard'] .btn-play {
+    width: 42px;
+    height: 42px;
+    margin: 0 2px;
+  }
+  .control-bar[data-layout='standard'] .btn-play svg {
+    width: 20px;
+    height: 20px;
+  }
+  .control-bar[data-layout='standard'] .btn-speed {
+    height: 28px;
+    min-width: 40px;
+    font-size: 11px;
+  }
+  .control-bar[data-layout='standard'] .cb-time {
+    font-size: 11px;
+    min-width: 40px;
+    height: 30px;
+  }
+  .control-bar[data-layout='standard'] .volume-slider {
+    display: none;
+  }
+  .control-bar[data-layout='minimal'] {
+    border-radius: 18px;
+  }
+  .control-bar .volume-slider {
+    width: 56px;
+  }
+  .cb-time {
+    font-size: 10.5px;
+    min-width: 8ch;
+  }
+  .control-bar .btn-play {
+    width: 32px;
+    height: 32px;
+  }
+  .control-bar .btn {
+    width: 26px;
+    height: 26px;
+  }
+  .stage-title {
+    font-size: 13px;
+    top: 14px;
+  }
+  .empty-state {
+    padding: 20px;
+  }
+  .empty-state h1 {
+    font-size: 16px;
+  }
+  .empty-state p {
+    font-size: 12px;
+  }
+  .empty-sub {
+    font-size: 10.5px !important;
+  }
+  .captions-menu,
+  .settings-menu,
+  .subtitle-settings-popover,
+  .mv-popover-menu {
+    left: 12px !important;
+    right: 12px !important;
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-bottom) - env(safe-area-inset-top)) !important;
+  }
+  .speed-menu {
+    min-width: 140px;
+  }
+  .mv-toolbar {
+    padding: 0 8px;
+    gap: 4px;
+    min-height: 44px;
+  }
+  .mv-cluster {
+    gap: 3px;
+  }
+  .mv-cluster .icon-btn {
+    padding: 0 7px;
+    height: 28px;
+    gap: 4px;
+  }
+  .mv-cluster .icon-btn.icon-only {
+    width: 28px;
+    height: 28px;
+  }
+  .mv-cluster .icon-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  .mv-ingest {
+    height: 28px;
+    gap: 2px;
+    padding: 2px;
+  }
+  .mv-ingest .icon-btn {
+    height: 24px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
+  .mv-ingest .icon-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+  .mv-url-form {
+    max-width: 100px;
+    flex: 1 1 80px;
+  }
+  .mv-url-form input {
+    height: 24px;
+    font-size: 11px;
+    padding: 0 26px 0 8px;
+  }
+  .mv-url-submit {
+    width: 20px;
+    height: 20px;
+  }
+  .mv-url-submit svg {
+    width: 12px;
+    height: 12px;
+  }
+  .mv-segmented {
+    height: 28px;
+    padding: 2px;
+  }
+  .mv-seg {
+    height: 24px;
+    padding: 0 7px;
+    font-size: 10.5px;
+  }
+  .mv-cols-stepper {
+    display: none !important;
+  }
+  .mv-seg-divider {
+    display: none !important;
+  }
+  .mv-divider {
+    height: 16px;
+    margin: 0 2px;
+  }
+  .mv-back-anchor {
+    padding: 0 8px;
+    height: 28px;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-panel,
+  .playlist-panel {
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    border: none;
+  }
+  .search-panel {
+    transform: translateX(-100%);
+  }
+  .playlist-panel {
+    transform: translateX(100%);
+  }
+  .panel-head {
+    padding-top: 14px;
+  }
+  #mvSyncStartBtn,
+  #mvSleepBtn,
+  .mv-divider {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-bar[data-layout='classic'] .volume-container {
+    display: none;
+  }
+  .control-bar[data-layout='standard'] .volume-container {
+    display: none;
+  }
+  .control-bar[data-layout='minimal'] .volume-slider {
+    display: none;
+  }
+  .resume-toast {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .resume-toast-actions {
+    justify-content: flex-end;
+  }
+  .empty-state {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand-name {
+    display: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .control-bar .btn {
+    width: 34px;
+    height: 34px;
+  }
+  .control-bar .btn-play {
+    width: 42px;
+    height: 42px;
+  }
+  .control-bar .btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .control-bar .btn-play .icon-play,
+  .control-bar .btn-play .icon-pause {
+    width: 20px;
+    height: 20px;
+  }
+  .control-bar .btn-speed {
+    min-width: 44px;
+    height: 30px;
+    font-size: 12px;
+  }
+  .control-bar .scrubber {
+    height: 6px;
+  }
+  .control-bar .scrubber-handle {
+    width: 14px;
+    height: 14px;
+    opacity: 1;
+  }
+  .control-bar[data-layout='standard'] .btn {
+    width: 44px;
+    height: 44px;
+  }
+  .control-bar[data-layout='standard'] .btn-play {
+    width: 54px;
+    height: 54px;
+  }
+  .mv-tile-scrub {
+    height: 32px;
+  }
+  .mv-tile-scrub::before {
+    height: 5px;
+  }
+  .mv-tile-scrub-fill {
+    height: 5px;
+  }
+  .mv-tile-scrub-handle {
+    width: 16px;
+    height: 16px;
+    opacity: 1;
+  }
+  .mv-tile-controls button {
+    width: 36px;
+    height: 36px;
+  }
+  .mv-tile-controls button svg {
+    width: 18px;
+    height: 18px;
+  }
+  .mv-resize-handle {
+    opacity: 1;
+  }
+  .pi-actions {
+    opacity: 1;
+  }
+  .plc-remove {
+    opacity: 1;
+  }
+  .plc-list-remove {
+    opacity: 1;
+  }
+  .ghost-btn,
+  .icon-btn {
+    height: 36px;
+  }
+  .icon-btn.icon-only {
+    width: 36px;
+  }
+  .mv-cluster .icon-btn {
+    height: 34px;
+  }
+  .mv-cluster .icon-btn.icon-only {
+    width: 34px;
+  }
+  .segmented-tabs button {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+  .search-tab {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+  .settings-item,
+  .settings-toggle-row {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

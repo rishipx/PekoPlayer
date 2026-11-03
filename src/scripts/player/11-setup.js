@@ -179,6 +179,7 @@ PekoClassParts.install(
           'fxNavValue',
           'eqNavValue',
           'themeSwatches',
+          'colorModeGroup',
           'themePicker',
           'abLoopBadge',
           'abLoopBadgeElapsed',

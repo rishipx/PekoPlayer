@@ -196,6 +196,29 @@ PekoClassParts.install(
         if (!opts.silent) this.saveSettings();
       },
 
+      /** Sets the color mode: 'system' follows the OS, 'light' and 'dark' force a palette. */
+      applyColorMode(mode, opts = {}) {
+        if (!['system', 'light', 'dark'].includes(mode)) mode = 'system';
+        this.colorMode = mode;
+        const root = document.documentElement;
+        if (mode === 'system') root.removeAttribute('data-scheme');
+        else root.dataset.scheme = mode;
+        const chrome = { light: '#f5f4f1', dark: '#000000' };
+        document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+          if (meta.dataset.systemColor === undefined) meta.dataset.systemColor = meta.getAttribute('content') || '';
+          meta.setAttribute('content', mode === 'system' ? meta.dataset.systemColor : chrome[mode]);
+        });
+        this.syncColorModeUI();
+        if (!opts.silent) this.saveSettings();
+      },
+
+      syncColorModeUI() {
+        if (!this.el.colorModeGroup) return;
+        this.el.colorModeGroup
+          .querySelectorAll('button[data-scheme]')
+          .forEach((b) => b.classList.toggle('active', b.getAttribute('data-scheme') === this.colorMode));
+      },
+
       _lightenHex(hex, amount) {
         const c = hex.replace('#', '');
         const r = parseInt(c.slice(0, 2), 16),

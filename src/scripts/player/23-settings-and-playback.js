@@ -20,6 +20,7 @@ PekoClassParts.install(
           if (typeof s.controlLook === 'string') this.controlLook = s.controlLook;
           if (typeof s.speed === 'number') this.el.speedSelect.value = String(s.speed);
           if (typeof s.themeColor === 'string') this.applyTheme(s.themeColor, { silent: true });
+          if (typeof s.colorMode === 'string') this.applyColorMode(s.colorMode, { silent: true });
           if (typeof s.reduceMotion === 'boolean') this.applyReduceMotion(s.reduceMotion, { silent: true });
           if (s.eq && typeof s.eq.bass === 'number')
             this.eq = {
@@ -92,6 +93,7 @@ PekoClassParts.install(
               showStageTitle: this.showStageTitle,
               compactSpeedBtn: this.compactSpeedBtn,
               themeColor: this.themeColor,
+              colorMode: this.colorMode,
               reduceMotion: this.reduceMotion,
               timeDisplayMode: this.state.timeDisplayMode,
               playlistButtonInControlBar: this.playlistButtonInControlBar,

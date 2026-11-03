@@ -502,15 +502,15 @@
 }
 
 @media (prefers-color-scheme: light) {
-  [data-look='glass'].captions-menu,
-  [data-look='glass'].settings-menu,
-  [data-look='glass'].subtitle-settings-popover,
-  [data-look='glass'].speed-menu,
-  [data-look='glass'].mv-popover-menu,
-  .mv-view[data-look='glass'] .mv-toolbar,
-  .mv-view[data-look='glass'] .mv-tile-header,
-  .mv-view[data-look='glass'] .mv-tile-controls,
-  .control-bar[data-look='glass']:not([data-layout='standard']) {
+  :where(:root:not([data-scheme])) [data-look='glass'].captions-menu,
+  :where(:root:not([data-scheme])) [data-look='glass'].settings-menu,
+  :where(:root:not([data-scheme])) [data-look='glass'].subtitle-settings-popover,
+  :where(:root:not([data-scheme])) [data-look='glass'].speed-menu,
+  :where(:root:not([data-scheme])) [data-look='glass'].mv-popover-menu,
+  :where(:root:not([data-scheme])) .mv-view[data-look='glass'] .mv-toolbar,
+  :where(:root:not([data-scheme])) .mv-view[data-look='glass'] .mv-tile-header,
+  :where(:root:not([data-scheme])) .mv-view[data-look='glass'] .mv-tile-controls,
+  :where(:root:not([data-scheme])) .control-bar[data-look='glass']:not([data-layout='standard']) {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.48) 100%);
     border-color: rgba(0, 0, 0, 0.1);
     box-shadow:
@@ -518,13 +518,37 @@
       inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
       inset 0 -1px 1px rgba(0, 0, 0, 0.06);
   }
-  .control-bar[data-look='glass']:not([data-layout='standard']) .cb-time,
-  .control-bar[data-look='glass']:not([data-layout='standard']) .btn,
-  .control-bar[data-look='glass']:not([data-layout='standard']) .btn-speed {
+  :where(:root:not([data-scheme])) .control-bar[data-look='glass']:not([data-layout='standard']) .cb-time,
+  :where(:root:not([data-scheme])) .control-bar[data-look='glass']:not([data-layout='standard']) .btn,
+  :where(:root:not([data-scheme])) .control-bar[data-look='glass']:not([data-layout='standard']) .btn-speed {
     text-shadow:
       0 1px 2px rgba(255, 255, 255, 0.9),
       0 1px 3px rgba(0, 0, 0, 0.18);
   }
+}
+
+:where(:root[data-scheme='light']) [data-look='glass'].captions-menu,
+:where(:root[data-scheme='light']) [data-look='glass'].settings-menu,
+:where(:root[data-scheme='light']) [data-look='glass'].subtitle-settings-popover,
+:where(:root[data-scheme='light']) [data-look='glass'].speed-menu,
+:where(:root[data-scheme='light']) [data-look='glass'].mv-popover-menu,
+:where(:root[data-scheme='light']) .mv-view[data-look='glass'] .mv-toolbar,
+:where(:root[data-scheme='light']) .mv-view[data-look='glass'] .mv-tile-header,
+:where(:root[data-scheme='light']) .mv-view[data-look='glass'] .mv-tile-controls,
+:where(:root[data-scheme='light']) .control-bar[data-look='glass']:not([data-layout='standard']) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.48) 100%);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.06);
+}
+:where(:root[data-scheme='light']) .control-bar[data-look='glass']:not([data-layout='standard']) .cb-time,
+:where(:root[data-scheme='light']) .control-bar[data-look='glass']:not([data-layout='standard']) .btn,
+:where(:root[data-scheme='light']) .control-bar[data-look='glass']:not([data-layout='standard']) .btn-speed {
+  text-shadow:
+    0 1px 2px rgba(255, 255, 255, 0.9),
+    0 1px 3px rgba(0, 0, 0, 0.18);
 }
 
 .cb-top {

@@ -158,6 +158,10 @@ PekoClassParts.install(
           if (b) this.applyTheme(b.getAttribute('data-theme'));
         });
         el.themePicker?.addEventListener('input', (e) => this.applyTheme(e.target.value));
+        el.colorModeGroup?.addEventListener('click', (e) => {
+          const b = e.target.closest('button[data-scheme]');
+          if (b) this.applyColorMode(b.getAttribute('data-scheme'));
+        });
         el.showTitleRow?.addEventListener('click', () => {
           this.showStageTitle = !this.showStageTitle;
           this.syncInterfaceUI();

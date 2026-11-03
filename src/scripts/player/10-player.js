@@ -60,6 +60,7 @@ class PekoPlayer {
     this._lastAppliedNative = false;
     this._actionBadgeTimer = null;
     this.themeColor = '#FF6B00';
+    this.colorMode = 'system';
     this.reduceMotion = false;
     this.systemReducedMotion = false;
     this.videoFit = 'none';

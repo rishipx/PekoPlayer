@@ -13,3 +13,4 @@ desktop/package-lock.json
 # Markup and docs keep their hand-written layout (index.html contains build placeholders)
 src/index.html
 *.md
+wrangler.jsonc

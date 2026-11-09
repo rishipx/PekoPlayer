@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/pekoplayer.png" alt="PekoPlayer" width="720">
+  <img src="docs/images/pekoplayer.png" alt="PekoPlayer">
 </p>
 
 <p align="center">

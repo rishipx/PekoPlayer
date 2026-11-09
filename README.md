@@ -1,175 +1,190 @@
-<p align="center"><img src="branding/icon.png" width="140" alt="PekoPlayer logo"></p>
-
-<h1 align="center">PekoPlayer</h1>
-
 <p align="center">
-  <strong>A private video player for your browser and desktop.</strong><br>
-  Play local files, search subtitles like a document, shape the picture with WebGL2 effects, and watch several videos at once.<br>
-  No account, no uploads, no telemetry.
+  <img src="docs/images/pekoplayer.png" alt="PekoPlayer" width="720">
 </p>
 
 <p align="center">
-  <a href="https://rishipx.github.io/PekoPlayer/"><strong>Open the web app</strong></a> ·
-  <a href="https://github.com/rishipx/PekoPlayer/releases/latest"><strong>Download for Windows</strong></a> ·
-  <a href="#documentation">Documentation</a>
+  <a href="https://OWNER.github.io/PekoPlayer/">Web app</a> ·
+  <a href="https://github.com/OWNER/PekoPlayer/releases/latest">Windows download</a> ·
+  <a href="#documentation">Docs</a> ·
+  <a href="https://github.com/OWNER/PekoPlayer/actions/workflows/ci.yml"><img src="https://github.com/OWNER/PekoPlayer/actions/workflows/ci.yml/badge.svg" alt="CI" align="absmiddle"></a>
 </p>
+
+PekoPlayer plays video files from your own device, in the browser or as a portable Windows app. It has no backend: nothing is uploaded, and there are no accounts, analytics or error reports.
 
 <p align="center">
-  <a href="https://github.com/rishipx/PekoPlayer/actions/workflows/ci.yml"><img src="https://github.com/rishipx/PekoPlayer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <img src="docs/images/player.png" alt="PekoPlayer playing a video" width="860">
 </p>
 
-<p align="center"><img src="docs/images/player.png" alt="PekoPlayer playing a video with subtitles and the control bar" width="860"></p>
+---
 
-## Why PekoPlayer
+### Features
 
-- **Private by design.** Videos never leave your device. There is no backend, no analytics and no error reporting, and a test fails the build if a request to a third party sneaks in. See [Privacy](#privacy).
-- **Works offline.** The website installs as an app and keeps working without a connection, and the Windows app needs none at all.
-- **More than a play button.** Transcript search, chapters, bookmarks, A-B loops, an equalizer, video effects and a multi-view wall, all from the keyboard.
+- **Playback.** Files, folders and drag and drop (MP4, WebM, OGG, MOV, MKV, 3GP, as far as your browser can decode them). Speed control, frame stepping, A-B loop, silence skipping, sleep timer, Picture-in-Picture, resume position, bookmarks.
+- **Transcript search.** `.srt` and `.vtt` subtitles become a searchable transcript. Every match links to that moment, and small typos still match. Chapters from yt-dlp `.info.json` files or detected from pauses in the dialogue.
+- **Picture.** WebGL2 effects with presets and sliders for exposure, contrast, saturation, temperature, tint, sharpness and vignette. Brightness, fit and aspect ratio, rotate, zoom, screenshots that include the effects.
+- **Sound.** Equalizer with presets, skip silence, volume and speed control.
+- **Playlists.** Sidebar or carousel, shuffle, sorting, loop modes, thumbnail previews.
+- **Multi-view.** Local files and YouTube links side by side in a grid, split or free canvas layout.
+- **Interface.** Three control bar layouts, three looks, eight accent colors plus a custom one, elapsed or remaining time.
 
-## Features
+---
 
-**Playback**
-- Local files, whole folders and drag and drop: MP4, WebM, OGG, MOV, MKV and 3GP, as far as the browser can decode them
-- Speed control, frame stepping, A-B loop, silence skipping and a sleep timer
-- Picture-in-Picture, fullscreen, media keys and casting where the browser supports them
-- Resume where you left off, and bookmarks you can click to jump to
-
-**Subtitles and search**
-- `.srt` and `.vtt` subtitles with adjustable delay and style
-- Transcript search on your device: type a word, see every line that says it, click to seek. Small typos still match
-- Chapters from yt-dlp `.info.json` files, or detected from pauses in the dialogue
-
-**Picture and sound**
-- WebGL2 effects with presets (Vivid, Cinematic, Warm, Cool, Film, Mono, Sharp) and sliders for exposure, contrast, saturation, temperature, tint, sharpness and vignette
-- Equalizer with presets, rotation, zoom and pan, and screenshots that include the effects
-
-**Playlists**
-- Shuffle, sort, loop modes, a carousel view and thumbnail previews on hover
-
-**Multi-view**
-- Local videos and YouTube links side by side in a free canvas, a smart grid or a split layout
-- Reorder tiles by dragging, and resize panes with handles, without anything overlapping or being cropped
-- Play, mute and restart controls for the whole wall, and per-tile controls for each video
-
-**Everywhere**
-- Installable as an app, fully offline, and built to be driven from the keyboard (press `?` for every shortcut)
-- A portable Windows app that adds itself to the **Open with** menu
-
-## Screenshots
+### Screenshots
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/images/player-empty-state.png" alt="Interface"><br><sub><b>Transcript search.</b> Find a line, click to jump to it.</sub></td>
-    <td width="50%"><img src="docs/images/settings.png" alt="Customize everything"><br><sub><b>Video effects.</b> Presets and fine control.</sub></td>
+    <td width="50%"><img src="docs/images/player-empty-state.png" alt="Empty state"><br><sub><b>Empty state</b></sub></td>
+    <td width="50%"><img src="docs/images/multi-view-grid.png" alt="Multi-view grid"><br><sub><b>Multi-view</b></sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/images/multi-view-grid.png" alt="View Multiple videos at same time"><br><sub><b>Multi-view, grid.</b> Every video keeps its shape.</sub></td>
-    <td width="50%"><img src="docs/images/keyboard-shortcuts.png" alt="built to be driven from the keyboard"><br><sub><b>Multi-view, split.</b> Drag the handle between panes to resize.</sub></td>
+    <td width="50%"><img src="docs/images/playlist-sidebar.png" alt="Playlist sidebar"><br><sub><b>Playlist sidebar</b></sub></td>
+    <td width="50%"><img src="docs/images/playlist-carousel.png" alt="Playlist carousel"><br><sub><b>Playlist carousel</b></sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/transcript-search.png" alt="Transcript search"><br><sub><b>Transcript search</b></sub></td>
+    <td width="50%"><img src="docs/images/video-effects.png" alt="Video effects panel"><br><sub><b>Video effects</b></sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/player-settings.png" alt="Player settings menu"><br><sub><b>Playback settings</b></sub></td>
+    <td width="50%"><img src="docs/images/player-interface-settings.png" alt="Interface settings"><br><sub><b>Interface settings</b></sub></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/images/time-remaining-modes.webp" alt="Elapsed and total, or elapsed and remaining" width="640"><br><sub><b>Time display.</b> Click it to switch between elapsed and remaining time.</sub></td>
   </tr>
 </table>
 
-More: [keyboard shortcuts](docs/images/keyboard-shortcuts.png) and the [empty state](docs/images/player-empty-state.png).
+#### Control bar
 
-## Get it
+Pick a layout and a look under **Settings → Interface**.
 
-| | |
+| Classic | Compact | Capsule |
+|---|---|---|
+| <img src="docs/images/classic-control-bar.png" alt="Classic control bar"> | <img src="docs/images/compact-control-bar.png" alt="Compact control bar"> | <img src="docs/images/capsule-control-bar.png" alt="Capsule control bar"> |
+
+| Frost | Glass | Solid |
+|---|---|---|
+| <img src="docs/images/control-bar-pink-accent-frost-look.png" alt="Frost look"> | <img src="docs/images/control-bar-pink-accent-glass-look.png" alt="Glass look"> | <img src="docs/images/control-bar-pink-accent-solid-look.png" alt="Solid look"> |
+
+---
+
+### Keyboard Shortcuts
+
+<p align="center"><img src="docs/images/keyboard-shortcuts.png" alt="Keyboard shortcuts panel" width="360"></p>
+
+| Key | Action |
 |---|---|
-| **Web app** | Open the site, then use the browser's install button (or **Install web app** in the shortcuts panel, `?`). After the first visit it works offline. |
-| **Windows** | Download `PekoPlayer-<version>-portable.exe` from the [latest release](https://github.com/OWNER/PekoPlayer/releases/latest) and run it. There is no installer and no administrator rights are needed. Windows may warn about an unsigned app: choose **More info**, then **Run anyway**, and compare the file with the published `.sha256`. |
-| **From source** | See [Quick start](#quick-start). |
+| `Space` | Play / pause |
+| Hold `Space` | Play at 2× |
+| `←` `→` | Seek back / forward |
+| `↑` `↓` | Volume up / down |
+| `M` | Mute |
+| `0`–`9` | Jump to 0–90% of the video |
+| `,` `.` | Step one frame back / forward (paused) |
+| `N` / `Shift+N` | Next / previous video |
+| `L` | Cycle loop mode |
+| `A` | Set A-B loop point |
+| `B` or `Shift+M` | Add bookmark |
+| `C` | Toggle captions |
+| `/` | Search transcript and chapters |
+| `G` | Cycle video effects |
+| `R` | Rotate video |
+| `+` `-` | Zoom in / out |
+| `Z` | Reset zoom |
+| `S` | Screenshot |
+| `F` | Fullscreen |
+| `P` | Picture-in-Picture |
+| `O` | Open files |
+| `Q` | Toggle playlist |
+| `V` | Multi-view |
+| `[` `]` | Move the active multi-view tile earlier / later |
+| `Ctrl+Shift+D` | Debug panel |
+| `?` | Show this list |
 
-## Quick start
+---
 
-Requires [Node.js](https://nodejs.org) 22 (see `.nvmrc`).
+### Install
+
+<table>
+  <tr>
+    <td><b>Web app</b></td>
+    <td>Open the site and use your browser's install button, or <b>Install web app</b> in the shortcuts panel (<code>?</code>). After the first visit it works offline.</td>
+  </tr>
+  <tr>
+    <td><b>Windows</b></td>
+    <td>Download <code>PekoPlayer-&lt;version&gt;-portable.exe</code> from the <a href="https://github.com/OWNER/PekoPlayer/releases/latest">latest release</a> and run it. No installer, no administrator rights. The file is unsigned, so SmartScreen may warn: choose <b>More info → Run anyway</b>.</td>
+  </tr>
+  <tr>
+    <td><b>Source</b></td>
+    <td>See <a href="#run-from-source">Run from source</a>.</td>
+  </tr>
+</table>
+
+The installed web app and the Windows app both appear in **Open with** for video files.
+
+---
+
+### Run from source
+
+Requires [Node.js](https://nodejs.org) 22.
 
 ```bash
 npm ci
 npm run build
-npm run serve     # open http://localhost:8080
+npm run serve          # http://localhost:8080
 ```
 
-Open the served URL rather than `dist/index.html`: the offline mode and install prompt need `http://localhost` or HTTPS.
-
-To try the desktop app or build the Windows executable:
+Use the served URL rather than opening `dist/index.html`; offline mode and the install prompt need `localhost` or HTTPS.
 
 ```bash
-npm run desktop:start   # run it
-npm run desktop:dist    # build release/PekoPlayer-<version>-portable.exe
+npm run desktop:start  # run the desktop app
+npm run desktop:dist   # build release/PekoPlayer-<version>-portable.exe
 ```
 
-## Keyboard
+---
 
-| Key | Action | Key | Action |
-|---|---|---|---|
-| `Space` | Play or pause | `/` | Search the transcript and chapters |
-| `←` `→` | Seek | `V` | Multi-view |
-| `↑` `↓` | Volume | `G` | Cycle video effects |
-| `B` | Add a bookmark | `A` | Set an A-B loop point |
-| `P` | Picture-in-Picture | `S` | Screenshot |
-| `F` | Fullscreen | `?` | Every shortcut |
+### Browser support
 
-In multi-view, `[` and `]` move the active tile earlier or later.
+Developed and tested in Chromium. Effects use WebGL2 in a worker (`OffscreenCanvas`); browsers without it hide the feature. Firefox and WebKit get a startup check in CI. Playable formats depend on your browser's codecs.
 
-## Using it
+---
 
-| Action | How |
-|---|---|
-| Add media | **Open** or **Folder** in the top bar, or drag and drop. Subtitle and `.info.json` files are matched by name. |
-| Hide the top bar | The small up arrow next to the `?` icon. Move the pointer to the top edge to reveal a down arrow, and click it to bring the bar back. On touch screens the arrow is always visible. The choice is remembered. |
-| Bookmarks | `B` or `Shift+M` adds one. Click a marker to jump to it, right-click to remove it. |
-| Arrange multi-view | Drag a tile's header to reorder it. Drag the handles between panes to resize them. Double-click a handle to reset. See [Multi-view](docs/multi-view.md). |
-| Open from the file manager | The installed web app and the Windows app both appear in **Open with** for video files. |
+### Development
 
-## Privacy
-
-- No analytics, telemetry, error reporting, cookies or accounts. `npm run check` fails if a network API built for telemetry or an unapproved host appears in the sources, and a smoke test verifies that startup makes no third-party request.
-- Fonts, icons and all code are served from the same origin. Nothing loads from a CDN.
-- Videos, subtitles and transcripts are processed on your device. Resume positions, bookmarks, thumbnails and settings are kept in your browser's `localStorage` and IndexedDB and never leave it.
-- Two features contact third parties, and only when you use them: a YouTube tile in multi-view loads the YouTube player (from `youtube-nocookie.com`), and the subtitle search link opens opensubtitles.org in a new tab with the video's file name in the address.
-- The address bar is never modified: file names and playback positions do not end up in the URL or in browser history.
-
-## Browser support
-
-Developed and tested in Chromium. The player uses WebGL2 in a worker (`OffscreenCanvas`), `requestVideoFrameCallback` and Picture-in-Picture APIs; browsers without them fall back or hide the feature. Firefox and WebKit get a startup check in CI. Which video formats play depends on the browser's codecs.
-
-## Development
-
-| Command | What it does |
-|---|---|
-| `npm run build` | Build to `dist/` |
-| `npm run build:pages` | Build with the Content-Security-Policy embedded as a `<meta>` tag (for GitHub Pages) |
-| `npm run serve` | Serve `dist/` on port 8080 with the production headers |
-| `npm run lint` / `npm run format` | ESLint and Prettier |
-| `npm run check` | Static checks (syntax, CSS, naming, leftover markers, privacy guard) |
-| `npm run test:unit` | Fast Node tests for the pure logic |
-| `npm test` | Lint, format check, checks, unit tests, build and smoke tests |
-| `npm run desktop:dist` | Build the portable Windows executable into `release/` |
-| `npm run fonts:vendor` · `icons:lucide` · `icons` | Refresh the bundled fonts, vendored icons and app icons |
-| `npm run docs:screenshots` | Regenerate the screenshots in `docs/images` from the real app |
+```bash
+npm test               # lint, format check, static checks, unit tests, build, smoke tests
+npm run test:unit      # fast tests for the pure logic
+```
 
 ```
-src/        Application source: HTML, CSS, browser scripts, workers, icons
-src/shared/ Code and constants used by more than one bundle or worker
-public/     Files copied to the build unchanged (manifest, app icons, fonts)
-desktop/    Electron shell for the portable Windows executable
-branding/   App icon master and the social preview image
-tools/      Node tooling: build, check, font and icon helpers, dev server
-tests/      Unit tests, smoke tests and fixtures
+src/        App source: HTML, CSS, scripts, workers, icons
+public/     Files copied to the build unchanged
+desktop/    Electron shell for the Windows build
+tools/      Build, check and dev-server scripts
+tests/      Unit and smoke tests
 docs/       Guides and screenshots
-.github/    CI, Pages deployment, releases, issue and pull request templates
 ```
 
-## Documentation
+---
 
-- [Architecture](docs/architecture.md): source layout, how the large classes are split, the build, the CSP and the service worker
-- [Multi-view](docs/multi-view.md): layouts, reordering and resizing
-- [Desktop build](docs/desktop.md): the portable Windows executable
-- [Deployment](docs/deployment.md): GitHub Pages, Cloudflare, Netlify and other hosts
-- [Publishing](docs/publishing.md): putting the project on GitHub and cutting a release
-- [Testing](docs/testing.md): the test suites and fixtures
-- [Debug tools](docs/debugging.md): the hidden diagnostics panel (Ctrl+Shift+D)
-- [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Disclaimer](DISCLAIMER.md)
+### Privacy
 
-## License
+- No analytics, telemetry, cookies or accounts. `npm run check` fails the build if a telemetry API or an unapproved host appears in the source, and a smoke test confirms startup makes no third-party request.
+- Fonts, icons and code are served from the same origin. Nothing loads from a CDN.
+- Settings, resume positions, bookmarks and thumbnails stay in your browser's `localStorage` and IndexedDB. The Windows app keeps them in a `PekoPlayer-data` folder next to the executable.
+- Two features contact third parties, only when you use them: YouTube tiles in multi-view (`youtube-nocookie.com`) and the subtitle search (opensubtitles.org).
 
-[MIT](LICENSE). Lucide icons are ISC licensed ([src/icons/LICENSE](src/icons/LICENSE)) and the bundled fonts use the SIL Open Font License ([public/fonts/LICENSE.txt](public/fonts/LICENSE.txt)). See the [Disclaimer](DISCLAIMER.md).
+---
+
+### Documentation
+
+[Architecture](docs/architecture.md) · [Multi-view](docs/multi-view.md) · [Desktop build](docs/desktop.md) · [Deployment](docs/deployment.md) · [Publishing](docs/publishing.md) · [Testing](docs/testing.md) · [Debug panel](docs/debugging.md)
+
+[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Disclaimer](DISCLAIMER.md)
+
+---
+
+### License
+
+[MIT](LICENSE). Bundled Lucide icons are ISC ([license](src/icons/LICENSE)); bundled fonts use the SIL Open Font License ([license](public/fonts/LICENSE.txt)).
+
+<p align="center"><img src="docs/images/logo-red-panda.png" alt="PekoPlayer logo" width="96"></p>

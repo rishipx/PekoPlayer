@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Portable desktop build of PekoPlayer",
+  "license": "GPL-3.0-only",
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",

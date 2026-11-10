@@ -1,6 +1,6 @@
 # Disclaimer
 
-PekoPlayer is free, open-source software released under the [MIT License](LICENSE). By using it you accept the terms below.
+PekoPlayer is free, open-source software released under the [GNU General Public License v3.0](LICENSE). By using it you accept the terms below.
 
 ## No warranty
 

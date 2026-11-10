@@ -9,7 +9,7 @@ How to put the project on GitHub, set the repository up properly, and ship a rel
    (Get-Content README.md) -replace 'OWNER','<you>' | Set-Content README.md
    (Get-Content package.json) -replace 'OWNER','<you>' | Set-Content package.json
    ```
-2. `LICENSE` is the unmodified GPL-3.0 text, so leave it as is. Your copyright line is in the notice at the end of the README.
+2. `LICENSE` is the unmodified GPL-3.0 text, so leave it as is.
 3. Make sure you have the right to publish the icon in `branding/`.
 4. Set your git identity, using the no-reply address from GitHub → Settings → Emails so your real address stays private:
    ```powershell
